@@ -1,0 +1,26 @@
+{
+  "name": "cookies",
+  "version": "0.0.1",
+  "description": "cookies for the browser",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nathanfaucett/cookies.git"
+  },
+  "main": "src/index.js",
+  "keywords": [
+    "cookies",
+    "cookies.js"
+  ],
+  "author": "Nathan Faucett",
+  "license": "BSD-2-Clause",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "grunt": "",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-jsbeautifier": ""
+  },
+  "dependencies": {
+    "type": "nathanfaucett/type"
+  }
+}
+
