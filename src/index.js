@@ -9,15 +9,21 @@ var cookies = module.exports,
 
 
 cookies.get = function(key) {
+    var value;
+
     if (!key) {
         return null;
     }
 
-    return JSON.parse(decodeURIComponent(
-        document.cookie.replace(
-            new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(key).replace(reReplacer, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1"
-        )
-    )) || null;
+    value = (
+        decodeURIComponent(
+            document.cookie.replace(
+                new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(key).replace(reReplacer, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1"
+            )
+        ) || null
+    );
+
+    return value != null && value !== "undefined" ? JSON.parse(value) : null;
 };
 
 cookies.set = function(key, value, end, path, domain, secure) {
