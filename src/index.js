@@ -8,6 +8,14 @@ var cookies = module.exports,
     reSet = /^(?:expires|max\-age|path|domain|secure)$/i;
 
 
+function parseJSON(value) {
+    try {
+        value = JSON.parse(value);
+    } catch (e) {}
+
+    return value;
+}
+
 cookies.get = function(key) {
     var value;
 
@@ -23,7 +31,7 @@ cookies.get = function(key) {
         ) || null
     );
 
-    return value != null && value !== "undefined" ? JSON.parse(value) : null;
+    return value != null ? parseJSON(value) : null;
 };
 
 cookies.set = function(key, value, end, path, domain, secure) {
