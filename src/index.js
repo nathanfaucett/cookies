@@ -31,7 +31,7 @@ cookies.get = function(key) {
         ) || null
     );
 
-    return value != null ? parseJSON(value) : null;
+    return value != null && value !== "undefined" && value !== "null" ? parseJSON(value) : null;
 };
 
 cookies.set = function(key, value, end, path, domain, secure) {
