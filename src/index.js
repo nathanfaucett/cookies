@@ -1,7 +1,9 @@
-var type = require("type");
+var type = require("type"),
+    environment = require("environment");
 
 
 var cookies = module.exports,
+    document = environment.document,
     reReplacer = /[\-\.\+\*]/g,
     reKeys = /((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g,
     reValues = /\s*(?:\=[^;]*)?;\s*/,
@@ -15,6 +17,11 @@ function parseJSON(value) {
 
     return value;
 }
+
+if (!type.isString(document.cookie)) {
+    document.cookie = "";
+}
+
 
 cookies.get = function(key) {
     var value;
