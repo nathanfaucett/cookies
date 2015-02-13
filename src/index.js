@@ -1,8 +1,11 @@
-var type = require("type"),
+var isString = require("is_string"),
+    isNumber = require("is_number"),
+    isDate = require("is_date"),
+    isObject = require("is_object"),
     environment = require("environment");
 
 
-var cookies = module.exports,
+var cookies = exports,
     document = environment.document,
     reReplacer = /[\-\.\+\*]/g,
     reKeys = /((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g,
@@ -18,7 +21,7 @@ function parseJSON(value) {
     return value;
 }
 
-if (!type.isString(document.cookie)) {
+if (!isString(document.cookie)) {
     document.cookie = "";
 }
 
@@ -50,15 +53,15 @@ cookies.set = function(key, value, end, path, domain, secure) {
 
     expires = "";
 
-    if (type.isNumber(end)) {
+    if (isNumber(end)) {
         expires = end === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + end;
-    } else if (type.isString(end)) {
+    } else if (isString(end)) {
         expires = "; expires=" + end;
-    } else if (type.isDate(end)) {
+    } else if (isDate(end)) {
         expires = "; expires=" + end.toUTCString();
     }
 
-    if (type.isObject(value)) {
+    if (isObject(value)) {
         value = JSON.stringify(value);
     } else {
         value = value + "";
