@@ -1,4 +1,5 @@
-var isString = require("is_string"),
+var isNullOrUndefined = require("is_null_or_undefined"),
+    isString = require("is_string"),
     isNumber = require("is_number"),
     isDate = require("is_date"),
     isObject = require("is_object"),
@@ -14,11 +15,23 @@ var cookies = exports,
 
 
 function parseJSON(value) {
+    var json;
     try {
-        value = JSON.parse(value);
-    } catch (e) {}
+        json = JSON.parse(value);
+    } catch (e) {
+        json = value;
+    }
+    return json;
+}
 
-    return value;
+function stringifyJSON(value) {
+    var string;
+    try {
+        string = JSON.stringify(value);
+    } catch (e) {
+        string = "";
+    }
+    return string;
 }
 
 if (!isString(document.cookie)) {
@@ -29,69 +42,70 @@ if (!isString(document.cookie)) {
 cookies.get = function(key) {
     var value;
 
-    if (!key) {
-        return null;
-    }
-
-    value = (
-        decodeURIComponent(
+    if (isNullOrUndefined(key)) {
+        return value;
+    } else {
+        value = decodeURIComponent(
             document.cookie.replace(
-                new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(key).replace(reReplacer, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1"
+                new RegExp(
+                    "(?:(?:^|.*;)\\s*" + encodeURIComponent(key)
+                    .replace(reReplacer, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"
+                ), "$1"
             )
-        ) || null
-    );
-
-    return value != null && value !== "undefined" && value !== "null" ? parseJSON(value) : null;
+        );
+        return (!isNullOrUndefined(value) && value !== "undefined" && value !== "null" && value) ? parseJSON(value) : undefined;
+    }
 };
 
 cookies.set = function(key, value, end, path, domain, secure) {
     var expires;
 
-    if (!key || reSet.test(key)) {
+    if (isNullOrUndefined(key) || reSet.test(key)) {
         return false;
-    }
-
-    expires = "";
-
-    if (isNumber(end)) {
-        expires = end === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + end;
-    } else if (isString(end)) {
-        expires = "; expires=" + end;
-    } else if (isDate(end)) {
-        expires = "; expires=" + end.toUTCString();
-    }
-
-    if (isObject(value)) {
-        value = JSON.stringify(value);
     } else {
-        value = value + "";
+        expires = "";
+
+        if (isNumber(end)) {
+            expires = end === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + end;
+        } else if (isString(end)) {
+            expires = "; expires=" + end;
+        } else if (isDate(end)) {
+            expires = "; expires=" + end.toUTCString();
+        }
+
+        if (isObject(value)) {
+            value = stringifyJSON(value);
+        } else {
+            value = value + "";
+        }
+
+        document.cookie = encodeURIComponent(key) + "=" + (
+            encodeURIComponent(value) +
+            expires +
+            (domain ? "; domain=" + domain : "") +
+            (path ? "; path=" + sPath : "") +
+            (secure ? "; secure" : "")
+        );
+
+        return true;
     }
-
-    document.cookie = encodeURIComponent(key) + "=" + (
-        encodeURIComponent(value) +
-        expires +
-        (domain ? "; domain=" + domain : "") +
-        (path ? "; path=" + sPath : "") +
-        (secure ? "; secure" : "")
-    );
-
-    return true;
 };
 
 cookies.has = function(key) {
-    if (!key) {
+    if (isNullOrUndefined(key)) {
         return false;
+    } else {
+        return (new RegExp(
+            "(?:^|;\\s*)" + encodeURIComponent(key).replace(reReplacer, "\\$&") + "\\s*\\=")).test(document.cookie);
     }
-    return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(key).replace(reReplacer, "\\$&") + "\\s*\\=")).test(document.cookie);
-
 };
 
 cookies.keys = function() {
     var keys = document.cookie.replace(reKeys, "").split(reValues),
-        length = keys.length - 1,
-        i = -1;
+        i = -1,
+        il = keys.length - 1;
 
-    while (i++ < length) {
+    while (i++ < il) {
         keys[i] = decodeURIComponent(keys[i]);
     }
 
@@ -101,9 +115,10 @@ cookies.keys = function() {
 cookies.remove = function(key, path, domain) {
     if (!cookies.has(key)) {
         return false;
+    } else {
+        document.cookie = encodeURIComponent(key) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (
+            (domain ? "; domain=" + domain : "") + (path ? "; path=" + path : "")
+        );
+        return true;
     }
-    document.cookie = encodeURIComponent(key) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (
-        (domain ? "; domain=" + domain : "") + (path ? "; path=" + path : "")
-    );
-    return true;
 };
