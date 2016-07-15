@@ -15,7 +15,7 @@ tape("cookies.has(key)", function(assert) {
 });
 
 tape("cookies.keys()", function(assert) {
-    assert.deepEqual(cookies.keys("key"), ["key"]);
+    assert.deepEqual(cookies.keys(), ["key"]);
     assert.end();
 });
 

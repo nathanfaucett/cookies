@@ -1,9 +1,9 @@
-var isNullOrUndefined = require("is_null_or_undefined"),
-    isString = require("is_string"),
-    isNumber = require("is_number"),
-    isDate = require("is_date"),
-    isObject = require("is_object"),
-    environment = require("environment");
+var isNullOrUndefined = require("@nathanfaucett/is_null_or_undefined"),
+    isString = require("@nathanfaucett/is_string"),
+    isNumber = require("@nathanfaucett/is_number"),
+    isDate = require("@nathanfaucett/is_date"),
+    isObject = require("@nathanfaucett/is_object"),
+    environment = require("@nathanfaucett/environment");
 
 
 var cookies = exports,
