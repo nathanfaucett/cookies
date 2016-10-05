@@ -1,6 +1,6 @@
 {
   "name": "@nathanfaucett/cookies",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "get/set/remove cookies for the browser",
   "repository": {
     "type": "git",
@@ -34,6 +34,6 @@
     "@nathanfaucett/is_number": "^0.0.1",
     "@nathanfaucett/is_date": "^0.0.1",
     "@nathanfaucett/is_object": "^0.0.1",
-    "@nathanfaucett/environment": "^0.0.1"
+    "@nathanfaucett/environment": "^0.0.2"
   }
 }
